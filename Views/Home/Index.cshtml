@@ -1,0 +1,70 @@
+﻿@model AIImageClassifier.Models.ImageInputModel
+@{
+    ViewData["Title"] = "Home Page";
+    var results = ViewBag.Results as List<AIImageClassifier.Models.ClassificationResult>;
+    var similarImages = ViewBag.SimilarImages as List<string>;
+}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">AI Image Classifier</h1>
+
+    <!-- Image Upload Form -->
+    <form asp-action="Index" method="post" enctype="multipart/form-data" class="form-upload mb-4 text-center">
+        <div class="mb-3">
+            <input asp-for="ImageFile" type="file" class="form-control form-control-lg" id="imageInput" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg">Search similar images</button>
+    </form>
+
+    <!-- Image Preview and Results Section -->
+    <div class="row justify-content-center">
+        <!-- Left side: Image Preview and Similar Images -->
+        <div class="col-md-8 d-flex flex-column align-items-center justify-content-center text-center">
+            <!-- Image Preview Section -->
+            <div id="livePreview" class="preview mb-4" style="@(string.IsNullOrEmpty(Model.UploadedImageBase64) ? "display:none;" : "")">
+                @if(ViewBag.Results == null)
+                {
+                    <h4 class="mb-3">Preview:</h4>
+                }
+                else
+                {
+                    <h4 class="mb-3">Orginal:</h4>
+                }
+                <img id="previewImage"
+                     src="@(!string.IsNullOrEmpty(Model.UploadedImageBase64) ? Model.UploadedImageBase64 : "#")"
+                     alt="Preview" class="uploaded-image img-fluid mb-3 rounded shadow" />
+            </div>
+
+            <!-- Similar Images Section -->
+            @if (similarImages != null && similarImages.Count > 0)
+            {
+                <div class="similar-images-container">
+                    <h3>Similar Images:</h3>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        @foreach (var imageUrl in similarImages)
+                        {
+                            <img src="@imageUrl" alt="Similar Image" class="similar-image img-thumbnail" style="width: 135px; height: 135px; object-fit: cover;" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Right side: Results Section -->
+        <div class="col-md-3">
+            @if (results != null)
+            {
+                <h3 class="mb-3">Prediction Results:</h3>
+                <ul class="list-group">
+                    @foreach (var result in results)
+                    {
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>@result.Label</span>
+                            <span class="badge bg-success">@($"{result.Score * 100:F2}%")</span>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>
