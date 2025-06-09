@@ -1,5 +1,7 @@
 # AI Image Classifier
 
+> 🎓 **Academic Project** — developed as part of Programming intelligent systems at University of Economics in Carcow.
+
 This is a web application for classifying images and finding similar images using the power of machine learning models. The application allows users to upload an image, classify it using a pre-trained model, and display similar images fetched from Google Custom Search API.
 
 ## Features
